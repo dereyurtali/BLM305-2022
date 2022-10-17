@@ -19,7 +19,7 @@ function phi([n00, n01, n10, n11]) {
     return [...EVENTS]
       .map(e => ({evt: e, cor: phi(tableFor(e))}))
       .filter(x => Math.abs(x.cor) > min)
-      .map(x => x.evt+": "+x.cor.toFixed(4))
+      .map(x => x.evt+": "+x.cor.toFixed(4) + " " + ((Number(tableFor(x.evt)[1])) + Number(tableFor(x.evt)[3])))
     // let a = [];
     // for (let e of EVENTS) {
     //   let cor = phi(tableFor(e));
