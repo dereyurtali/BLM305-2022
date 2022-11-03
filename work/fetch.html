@@ -53,7 +53,7 @@
             navigator.geolocation
                 .getCurrentPosition(p =>
                     loc.innerText = p.coords.latitude.toFixed(4) +
-                    ' , ' + p.coords.longitude.toFixed(4)
+                    ', ' + p.coords.longitude.toFixed(4)
                 );
             navigator.getBattery().then(b =>
                 lev.innerText = '%' + (b.level * 100).toFixed(0)
