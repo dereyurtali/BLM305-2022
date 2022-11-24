@@ -3,18 +3,21 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HW3</title>
+  <meta name="viewport" content="width=device-width">
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>Fetch & Animations</title>
+ 
 </head>
 
 <body>
-  <p id="info"></p>
+  
   <button id="start" onclick="start()">Start</button>
   <button id="pause" onclick="pause()">Pause</button>
   <button id="start" onclick="stop()">Stop</button>
-  <button id="next" onclick="nextFrame()" disabled>Next</button>
   <button id="prev" onclick="prevFrame()" disabled>Previous</button>
+  <button id="next" onclick="nextFrame()" disabled>Next</button>
+  <p id="sprite" class="sprite"></p>
+
 
   <script>
     var fix = setInterval(function () {
@@ -26,13 +29,13 @@
         goFirstFrame = false;
       }
 
-      if (i >= 9) {
+      if (i >= 12) {
         i = 1;
       }
-      c.clearRect(100, 100, 100, 100)
-      c.drawImage(images[i - 1], 100, 100, 100, 100);
+      c.clearRect(0, 0, 400, 199)
+      c.drawImage(images[i - 1], 0, 0, 400, 199);
 
-    }, 100);
+    }, 85);
     var running = true;
     var goFirstFrame = false;
     var frameChange = false;
@@ -42,13 +45,13 @@
     var images = new Array();
     function animate() {
       document.body.append(canvas);
-      canvas.width = 250;
-      canvas.height = 250;
+      canvas.width = 400;
+      canvas.height = 199;
     }
-    setInterval(fix, 100);
+    setInterval(fix, 200);
 
     function fetching() {
-      for (var i = 1; i < 9; i++) {
+      for (var i = 1; i < 13; i++) {
         fetch("https://dereyurtali.github.io/BLM305-2022/homework/hw3/img/" + i.toString() + ".png")
           .then(res => res.blob())
           .then(result => {
@@ -71,14 +74,12 @@
         document.getElementById("next").setAttribute("disabled", "disabled");
         document.getElementById("prev").setAttribute("disabled", "disabled");
       }
-      document.getElementById("info").innerHTML = "Pause";
     }
     function start() {
       goFirstFrame = true;
       running = true;
       document.getElementById("next").setAttribute("disabled", "disabled");
       document.getElementById("prev").setAttribute("disabled", "disabled");
-      document.getElementById("info").innerHTML = "Start";
     }
     function stop() {
       running = false;
@@ -87,23 +88,20 @@
         document.getElementById("next").removeAttribute("disabled");
         document.getElementById("prev").removeAttribute("disabled");
       }
-      document.getElementById("info").innerHTML = "Stop";
     }
 
     function nextFrame() {
       i++;
-      if (i >= 9) {
+      if (i >= 12) {
         i = 1;
       }
 
-      document.getElementById("info").innerHTML = "Next";
     }
     function prevFrame() {
       i--;
       if (i <= 1) {
-        i = 8;
+        i = 12;
       }
-      document.getElementById("info").innerHTML = "Prev";
     }
   </script>
   <script>
