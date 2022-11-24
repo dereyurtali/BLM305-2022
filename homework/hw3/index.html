@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HW3</title>
+</head>
+
+<body>
+  <p id="info"></p>
+  <button id="start" onclick="start()">Start</button>
+  <button id="pause" onclick="pause()">Pause</button>
+  <button id="start" onclick="stop()">Stop</button>
+  <button id="next" onclick="nextFrame()" disabled>Next</button>
+  <button id="prev" onclick="prevFrame()" disabled>Previous</button>
+
+  <script>
+    var fix = setInterval(function () {
+      if (running) {
+        i++;
+      }
+      if (goFirstFrame) {
+        i = 1;
+        goFirstFrame = false;
+      }
+
+      if (i >= 9) {
+        i = 1;
+      }
+      c.clearRect(100, 100, 100, 100)
+      c.drawImage(images[i - 1], 100, 100, 100, 100);
+
+    }, 100);
+    var running = true;
+    var goFirstFrame = false;
+    var frameChange = false;
+    var canvas = document.createElement("canvas");
+    var c = canvas.getContext("2d");
+    var i = 1;
+    var images = new Array();
+    function animate() {
+      document.body.append(canvas);
+      canvas.width = 250;
+      canvas.height = 250;
+    }
+    setInterval(fix, 100);
+
+    function fetching() {
+      for (var i = 1; i < 9; i++) {
+        fetch(+ i.toString() + ".png")
+          .then(res => res.blob())
+          .then(result => {
+            let objectURL = window.URL.createObjectURL(result)
+            let image = new Image();
+            image.src = objectURL;
+            images.push(image);
+          });
+      }
+    }
+
+    function pause() {
+      running
+        ? (running = false) & (frameChange = true)
+        : (running = true) & (frameChange = false);
+      if (frameChange) {
+        document.getElementById("next").removeAttribute("disabled");
+        document.getElementById("prev").removeAttribute("disabled");
+      } else {
+        document.getElementById("next").setAttribute("disabled", "disabled");
+        document.getElementById("prev").setAttribute("disabled", "disabled");
+      }
+      document.getElementById("info").innerHTML = "Pause";
+    }
+    function start() {
+      goFirstFrame = true;
+      running = true;
+      document.getElementById("next").setAttribute("disabled", "disabled");
+      document.getElementById("prev").setAttribute("disabled", "disabled");
+      document.getElementById("info").innerHTML = "Start";
+    }
+    function stop() {
+      running = false;
+      frameChange = true;
+      if (frameChange) {
+        document.getElementById("next").removeAttribute("disabled");
+        document.getElementById("prev").removeAttribute("disabled");
+      }
+      document.getElementById("info").innerHTML = "Stop";
+    }
+
+    function nextFrame() {
+      i++;
+      if (i >= 9) {
+        i = 1;
+      }
+
+      document.getElementById("info").innerHTML = "Next";
+    }
+    function prevFrame() {
+      i--;
+      if (i <= 1) {
+        i = 8;
+      }
+      document.getElementById("info").innerHTML = "Prev";
+    }
+  </script>
+  <script>
+    animate();
+    fetching();
+  </script>
+</body>
+
+</html>
