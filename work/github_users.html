@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>GitHub Users</title>
+  <style>
+    body {
+        max-width: 500px;
+    }
+    img {
+        padding-right: 24px; 
+        padding-bottom: 24px;
+        width: 256px;
+        float: center;
+    }
+    pre { overflow-x: auto; }
+    #out { color: black; font-weight: 500}
+  </style>
+</head>
+
+<body>
+
+<h2 id=title></h2>
+<input type=text id=usr value=dereyurtali onChange="readUser()">
+<p id=out>Reading data</p>
+<hr />
+<b>Sample code</b>
+<pre id=sample></pre>
+<hr />
+<p>Ref: 
+  <a href="https://docs.github.com/en/rest/reference/rate-limit" target=NewTab>GitHub API</a> &emsp;
+  <a href="await.html" target=NewTab>await</a>
+</p>
+<script>
+"use strict";
+function error(e) {
+    out.innerText = e
+    out.style.color = 'red'
+    console.error(e)
+}
+function cause(s) {
+  switch (s) {
+    case 403:
+      return 'Rate limit exceeded'
+    case 404:
+      return usr.value+' not found'
+    default:
+      return 'Status '+s
+  }
+}
+async function toJSON(url) {
+  try {
+    let r = await fetch(url)
+    if (!r.ok) throw cause(r.status)
+    return r.json()
+  } catch (e) {
+    error(e)
+  }
+}async function readUser() {
+    const URL = "https://api.github.com/users/"
+    const BR = '<BR>'
+    let u = await toJSON(URL+usr.value)
+    if (!u || !u.login) return
+    out.style.color = ''
+    out.innerHTML = `<img src="${u.avatar_url} width="70" height="200">`
+    let name = (u.name || u.login)
+    let name_value= u.name
+    out.innerHTML += BR+"<b>Name</b>: "+name_value+BR;
+    let username = u.login
+    out.innerHTML += 
+    "<b>User name :</b>"+`<a href="https://${"github.com/"+username}" target=NewTab>${username}</a>`+BR
+    let location;
+    if (u.location) location = u.location
+    out.innerHTML += "<b>Location : </b>"+location+BR; 
+    let email;
+    if(u.email) email+=u.email;
+    out.innerHTML += "<b>Email : </b>"+email+BR
+    let company = u.company
+    out.innerHTML += "<b>Company : </b>"+company+BR
+    let repo = u.public_repos
+    let repo_names = await toJSON(URL+u.login+"/repos")
+    out.innerHTML += "<b>Github.io page : </b>"+`<a href="https://${repo_names.filter(r => r.name.endsWith(".github.io")).map(r=>r.name)}" target=NewTab>${repo_names.filter(r => r.name.endsWith(".github.io")).map(r=>r.name)}</a>`
+}
+    title.innerText = document.title
+    out.innerText = document.title
+    sample.innerText = toJSON +'\n'+ readUser
+    readUser()
+</script>
+
+</body>
+</html>
