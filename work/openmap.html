@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="../images/icon192.png">
+    <title>Open Weather</title>
+
+    <style>
+        body {
+            max-width: 450px;
+            margin: 0;
+        }
+
+        div {
+            display: inline-block;
+            margin: 12px;
+            vertical-align: top;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        b {
+            font-size: 18px;
+        }
+
+        pre {
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        .dar {
+            width: 42%;
+        }
+
+        /*
+#main {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background: #9cf;
+            font-size: 24px;
+            margin: 0;
+        }
+*/
+
+
+        #yer {
+            margin: 10px;
+        }
+
+        #err {
+            color: red
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            margin:0;
+            border: none;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <p>Enter a Lat and a Lon</p>
+        <input type="number" id="lat" value="">
+        <input type="number" id="lon" value="">
+        
+    </div>
+    <canvas id="myCanvas" width="450" height="150" style="background-color: #9cf;">
+    </canvas>
+    <div id=map style="width: 450px;height: 450px;"></div>
+    
+    <div id=two>
+        <div id=main>
+
+ 
+
+
+        </div>
+
+        <div class=dar>
+            <p><img id=icon> 
+            </p>
+        </div>
+
+        <div>
+            <p id=err>You need an API key for openweathermap.org
+                <a href="https://home.openweathermap.org/users/sign_up" target="NewTab">here</a>
+            </p>
+        </div>
+
+
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script>
+            "use strict";
+            function toHM(t) { // t in seconds -- convert to minutes
+                //number of hours since midnight, in local time
+                let h = (t % 86400) / 3600  // 0<=h<24
+                let m = (h % 1) * 60        // 0<=m<60
+                let twoDigits = t => (t < 10 ? '0' : '') + Math.trunc(t)
+                return twoDigits(h) + ":" + twoDigits(m + 0.5) //round
+            }
+            async function toJSON(url) {
+                let r = await fetch(url)
+                if (!r.ok) error(r.status)
+                return r.json()
+            }
+            // Location
+            var lat, lon;  //global values
+            async function askLocation() {
+                let name = 'geolocation'
+                let result = await navigator.permissions.query({ name })
+                if (result.state == 'denied') {
+                    let url = "https://ipinfo.io/json"
+                    toJSON(url).then(getLocation2, error)
+                } else {
+                    navigator.geolocation
+                        .getCurrentPosition(getLocation1, error);
+                }
+            }
+            function getLocation2(p) { //Approximate
+                console.log("ipinfo.io", p.city)
+                let [x, y] = p.loc.split(',')
+                lat = Number(x); lon = Number(y);
+                askWeather()
+            }
+            function getLocation1(p) { //Accurate
+                console.log("getCurrentPosition")
+                lat = p.coords.latitude; lon = p.coords.longitude;
+                askWeather()
+            }
+            // Weather
+            var accessKey;
+            async function askWeather() {
+                console.log(lat, lon);
+                lat = document.querySelector("#lat").value
+                lon = document.querySelector("#lon").value
+                let u = "https://api.openweathermap.org/data/2.5/weather?"
+                    + "lat=" + lat + "&lon=" + lon + "&APPID=" + accessKey;
+                //hava.innerText = "getting weather"
+                //detay.innerText = ''
+                //gunes.innerText = ''
+                let data = await toJSON(u)
+                fetch(u).then(r => r.json()).then(showWeather)
+                MAP.setView([lat, lon])
+            }
+            function showWeather(data) {
+                //creating canvas
+                var c = document.getElementById("myCanvas");
+                var ctx = c.getContext("2d");
+                ctx.font = "30px Times New Roman";
+                
+                let w = data.weather[0]; showIcon(w.icon)
+                let celsius = convert(data.main.temp).toFixed(0)
+                let hh = w.main + "  " + celsius + "°", { sys } = data
+                let yy = data.name + ', ' + sys.country
+                //hava.innerText = hh; yer.innerText = yy
+                ctx.clearRect(0,0, 450,150);
+                ctx.fillText(yy, 140, 60);
+
+                const image = new Image();
+                image.src = showIcon(w.icon);
+                image.onload = () => {
+                    ctx.drawImage(image, 90, 75)
+                }
+                ctx.fillText(hh, 140, 110);
+
+                //lat = data.coord.lat; lon = data.coord.lon
+                
+                //mahal.value = lat.toFixed(2) + ", " + lon.toFixed(2)
+                let wind = (3.6 * data.wind.speed).toFixed(0)
+                let pres = (0.750062 * data.main.pressure).toFixed(0)
+                const WIND = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N']
+                let d = (data.wind.deg / 45).toFixed(0)
+                detay.innerText = hh // +'\n'+yy +'\n['+mahal.value+"]"
+                    + '\nWind  ' + wind + ' km/h ' + WIND[d]
+                    + '\nPressure  ' + pres + ' mm'
+                    + '\nHumidity  %' + data.main.humidity
+                let { sunrise, sunset } = sys, noon = (sunrise + sunset) / 2
+                gunes.innerText = 'Rise ' + toHM(sunrise + data.timezone)
+                    + '\nNoon ' + toHM(noon + data.timezone)
+                    + '\nSet  ' + toHM(sunset + data.timezone)
+                    + '\nZone ' + (data.timezone / 3600)
+                console.log(hh, yy, 'Wind ' + data.wind.deg + '° ' + WIND[d])
+            }
+            function showIcon(i) {
+                const u = "https://openweathermap.org/img/w/"
+                icon.src = u + i + ".png"
+                document.querySelector('link').href = icon.src
+                return icon.src;
+            }
+            function convert(kelvin) {
+                return (kelvin - 273.15);
+                //return celsius*1.8 + 32
+            }
+            // Interaction
+            function askUser() {
+                let k = prompt('Please enter openweather key:')
+                if (!k) error('You need an API key')
+                return k
+            }
+            function error(e) {
+                main.style.display = "none"; //hide
+                //refs.style.display = "none";
+                err.style.display = ''; //show
+                throw e
+            }
+            function getAPIkey() {
+                if (origin.startsWith('http') && localStorage) {
+                    if (!localStorage.keys) localStorage.keys = '{}'
+                    let keys = JSON.parse(localStorage.keys)
+                    if (!keys.openweather) {
+                        keys.openweather = askUser()
+                        localStorage.keys = JSON.stringify(keys)
+                    }
+                    accessKey = keys.openweather
+                } else { //cannot use localStorage
+                    accessKey = askUser()
+                }
+            }
+            err.style.display = "none"
+            getAPIkey(); askLocation()
+            var MAP
+            function init() {
+                let p = { lat: 40.970021, lng: 29.057876 }
+                MAP = L.map('map').setView(p, 10)
+                MAP.setZoom(10)
+                let u = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                let attribution = '&copy; OpenStreetMap contributors'
+                L.tileLayer(u, { attribution }).addTo(MAP)
+                let report = () => console.log('calisti')
+                MAP.on('zoom', report); report()
+                MAP.on('click', e => {
+                    document.querySelector("#lat").value = e.latlng.lat.toFixed(3)
+                    document.querySelector("#lon").value = e.latlng.lng.toFixed(3)
+                    MAP = MAP.setView([e.latlng.lat, e.latlng.lng])
+                    askWeather()
+                    console.log(e.latlng)
+                })
+            }
+            function getKonum(lat, lon) {
+                let p = { lat: lat, lng: lon }
+
+                MAP = MAP.setView(p, 10)
+                let u = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                let att = '&copy; OpenStreetMap contributors'
+                L.tileLayer(u, { att }).addTo(MAP)
+            }
+            var incr = 0;
+            function stop() {
+                but.value = "Run"
+                but.onclick = start
+                incr = 0
+            }
+            function start() {
+                but.value = "Stop"
+                but.onclick = stop
+                incr = 1; zoom()
+            }
+            function zoom() {
+                if (incr == 0) return
+                let MIN = 5, MAX = MAP.getMaxZoom()
+                let z = MAP.getZoom() + incr
+                MAP.setZoom(z)
+                setTimeout(zoom, 700)
+                if (z <= MIN) incr = 1
+                if (z >= MAX) incr = -1
+            }
+            err.style.display = "none"
+            init();
+
+
+            mahal.onkeyup = e => {
+                let t = e.target
+                if (e.keyCode === 13) {
+                    e => {
+                    document.querySelector("#lat").value = e.latlng.lat.toFixed(3)
+                    document.querySelector("#lon").value = e.latlng.lng.toFixed(3)
+                    MAP = MAP.setView([e.latlng.lat, e.latlng.lng])
+                    askWeather()
+                    console.log(e.latlng)
+                }
+                }
+                if (e.keyCode === 27) t.blur()
+            }
+        </script>
+
+</body>
+
+</html>
