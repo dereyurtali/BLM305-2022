@@ -61,6 +61,7 @@ async function toJSON(url) {
     if (!u || !u.login) return
     out.style.color = ''
     out.innerHTML = `<img src="${u.avatar_url} width="70" height="200">`
+    console.log(u.avatar_url)
     let name = (u.name || u.login)
     let name_value= u.name
     out.innerHTML += BR+"<b>Name</b>: "+name_value+BR;

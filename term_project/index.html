@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Bring Me Some Art</title>
+
+    <style>
+        body {
+            max-width: 500px;
+        }
+
+        img {
+            padding-right: 24px;
+            padding-bottom: 24px;
+            width: 256px;
+            float: center;
+        }
+
+        #inp {
+            white-space: pre-wrap;
+        }
+
+        #sample {
+            overflow-x: auto;
+        }
+
+        #out {
+            color: rgb(140, 15, 15);
+        }
+    </style>
+    <base href="https://www.w3schools.com/" target="_blank">
+</head>
+
+<body>
+    <h2 id=title></h2>
+    <p> Website for bringing your daily art.</p>
+    <input type=text id=search value="rabbit">
+    <input type=button id=convert value="Get Something Related" onclick="getArt()">
+    <b>OR</b>
+    <input type=button id=convert value="Get Random Art" onclick="getArt()">
+    <p><b>I brought you this:</b></p>
+    
+    <img width="100" height="100" title="" alt="" src="https://dereyurtali.github.io/images/alidereyurt.jpg">
+    <script>
+        "use strict";
+        title.innerText = document.title
+        async function toJSON(url) {
+            try {
+                let r = await fetch(url)
+                if (!r.ok) throw cause(r.status)
+                return r.json()
+            } catch (e) {
+                error(e)
+            }
+        }
+        var accessKey = "d0635076-e6dd-4d4b-9a83-d31b8480596a";
+
+        async function getArt() {
+            var img_id = Math.floor(Math.random() * 381383);
+            let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
+                + "apikey=" + accessKey + "&sort=random";
+            console.log(u)
+            let data = await toJSON(u)
+            if (!u || !u.login) return
+            fetch(u).then(r => r.json()).then(console.log)
+        }
+        function showArt(data) {
+            let a = data.baseimageurl;
+            console.log(data)
+            
+            out.innerHTML = `<img src="${data.baseimageurl}>`
+            console.log(out.innerHTML)
+        }
+
+    </script>
+</body>
+
+</html>
