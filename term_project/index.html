@@ -22,16 +22,56 @@
         #search {
             white-space: pre-wrap;
             width: auto;
+            box-shadow: inset #abacaf 0 0 0 2px;
+            border: 0;
+            background: rgba(0, 0, 0, 0);
+            appearance: none;
+            width: 120px;
+            height: 12px;
+            position: relative;
+            border-radius: 3px;
+            padding: 8px;
+            line-height: 1.4;
+            color: rgb(0, 0, 0);
+            font-size: 16px;
+            font-weight: 400;
+            transition: all .2s ease;
         }
 
+
+
         #relButton {
-            overflow-x: auto;
-            height: auto;
-        }
-        #randButton {
-            overflow-x: auto;
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 2px solid #c1a195;
+            color: #c1a195;
+            background: 0 0;
+            padding: 8px;
+            box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
+            font-weight: 700;
+            font-size: 12px;
             height: 35px;
-            width: 300px;
+            width: 200px;
+
+        }
+
+        #randButton {
+
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 2px solid #c1a195;
+            color: #fff;
+            background-color: #c1a195;
+            padding: 8px;
+            box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
+            font-weight: 800;
+            font-size: 16px;
+            height: 42px;
+            width: 340px;
         }
 
         #out {
@@ -70,36 +110,36 @@
             var img_id = Math.floor(Math.random() * 1056);
             /*let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
                 + "apikey=" + accessKey + "&sort=random";*/
-            let u = "https://api.harvardartmuseums.org/object?page=" + img_id + "&size=1"  + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
+            let u = "https://api.harvardartmuseums.org/object?page=" + img_id + "&size=1" + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
             fetch(u).then(r => r.json())
             data = data.records[0];
-            if(data.primaryimageurl == null){
+            if (data.primaryimageurl == null) {
                 getRandomArt();
-            }else{
+            } else {
                 showArt(data)
             }
         }
         async function getSpecificArt() {
             var related = search.value;
-            let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey+ "&hasimage=1" + "&sort=random";
+            let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
             fetch(u).then(r => r.json())
             data = data.records[0];
-            if(data.primaryimageurl == null){
+            if (data.primaryimageurl == null) {
                 getRandomArt();
-            }else{
+            } else {
                 showArt(data)
             }
         }
         function showArt(data) {
             let a = data.primaryimageurl;
             console.log(data)
-          
+
             outImg.innerHTML = `<img title="" alt="" src="${a}">`
             showInfo(data)
         }
-        function showInfo(data){
+        function showInfo(data) {
             console.log(data.title)
             outText.innerText = data.title
         }
