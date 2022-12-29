@@ -15,7 +15,7 @@
         img {
             padding-right: 24px;
             padding-bottom: 24px;
-            width: 256px;
+
             float: center;
         }
 
@@ -38,12 +38,12 @@
     <h2 id=title></h2>
     <p> Website for bringing your daily art.</p>
     <input type=text id=search value="rabbit">
-    <input type=button id=convert value="Get Something Related" onclick="getArt()">
+    <input type=button id=convert value="Get Something Related" onclick="getSpecificArt()">
     <b>OR</b>
-    <input type=button id=convert value="Get Random Art" onclick="getArt()">
+    <input type=button id=convert value="Get Random Art" onclick="getRandomArt()">
     <p><b>I brought you this:</b></p>
-    
-    <img src="https://dereyurtali.github.io/BML305-2022/img/harvard.png">
+    <p id=out></p>
+
     <script>
         "use strict";
         title.innerText = document.title
@@ -56,24 +56,40 @@
                 error(e)
             }
         }
-        var accessKey = "d0635076-e6dd-4d4b-9a83-d31b8480596a";
+        //var accessKey = "d0635076-e6dd-4d4b-9a83-d31b8480596a"; eski key
+        var accessKey = "44376958-9315-49b1-958f-3157883b53f6";
 
-        async function getArt() {
-            var img_id = Math.floor(Math.random() * 381383);
-            let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
-                + "apikey=" + accessKey + "&sort=random";
+        async function getRandomArt() {
+            var img_id = Math.floor(Math.random() * 1056);
+            /*let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
+                + "apikey=" + accessKey + "&sort=random";*/
+            let u = "https://api.harvardartmuseums.org/image?page=" + img_id+ "&size=1"  + "&apikey=" + accessKey + "&sort=random";
             console.log(u)
             let data = await toJSON(u)
-            if (!u || !u.login) return
-            fetch(u).then(r => r.json()).then(console.log)
+            fetch(u).then(r => r.json())
+            data = data.records[0];
+            showArt(data)
+        }
+        async function getSpecificArt() {
+            var img_id = Math.floor(Math.random() * 381383);
+            var related = search.value;
+            let u = "https://api.harvardartmuseums.org/image?q=" + related + "&apikey=" + accessKey + "&sort=random";
+            console.log(u)
+            let data = await toJSON(u)
+            fetch(u).then(r => r.json())
+            data = data.records[0];
+            showArt(data)
         }
         function showArt(data) {
             let a = data.baseimageurl;
+            console.log(a)
             console.log(data)
-            
-            out.innerHTML = `<img src="${data.baseimageurl}>`
-            console.log(out.innerHTML)
+            out.innerHTML = `<img title="" width="600" height="600" alt="" src="${a}">`
         }
+        function showInfo(img_id){
+            
+        }
+
 
     </script>
 </body>
