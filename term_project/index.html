@@ -15,7 +15,8 @@
         img {
             padding-right: 24px;
             padding-bottom: 24px;
-
+            width: 70%;
+            height: 70%;
             float: center;
         }
 
@@ -42,8 +43,8 @@
     <b>OR</b>
     <input type=button id=convert value="Get Random Art" onclick="getRandomArt()">
     <p><b>I brought you this:</b></p>
-    <p id=out></p>
-
+    <p id=outImg></p>
+    <b id=outText></b>
     <script>
         "use strict";
         title.innerText = document.title
@@ -63,31 +64,38 @@
             var img_id = Math.floor(Math.random() * 1056);
             /*let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
                 + "apikey=" + accessKey + "&sort=random";*/
-            let u = "https://api.harvardartmuseums.org/image?page=" + img_id+ "&size=1"  + "&apikey=" + accessKey + "&sort=random";
-            console.log(u)
+            let u = "https://api.harvardartmuseums.org/object?page=" + img_id + "&size=1"  + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
             fetch(u).then(r => r.json())
             data = data.records[0];
-            showArt(data)
+            if(data.primaryimageurl == null){
+                getRandomArt();
+            }else{
+                showArt(data)
+            }
         }
         async function getSpecificArt() {
-            var img_id = Math.floor(Math.random() * 381383);
             var related = search.value;
-            let u = "https://api.harvardartmuseums.org/image?q=" + related + "&apikey=" + accessKey + "&sort=random";
-            console.log(u)
+            let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey+ "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
             fetch(u).then(r => r.json())
             data = data.records[0];
-            showArt(data)
+            if(data.primaryimageurl == null){
+                getRandomArt();
+            }else{
+                showArt(data)
+            }
         }
         function showArt(data) {
-            let a = data.baseimageurl;
-            console.log(a)
+            let a = data.primaryimageurl;
             console.log(data)
-            out.innerHTML = `<img title="" width="600" height="600" alt="" src="${a}">`
+          
+            outImg.innerHTML = `<img title="" alt="" src="${a}">`
+            showInfo(data)
         }
-        function showInfo(img_id){
-            
+        function showInfo(data){
+            console.log(data.title)
+            outText.innerText = data.title
         }
 
 
