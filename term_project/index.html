@@ -11,6 +11,7 @@
         body {
             max-width: 500px;
             padding-left: 5px;
+            background-color: #f0f0f0;
         }
 
         img {
@@ -24,7 +25,15 @@
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
         #motto{
-            font-size: 15px;
+            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
+            margin-top: -15px;
+            margin-bottom: 25px;
+        }
+        #motto2{
+            font-size: 14px;
+            font-family: 'Times New Roman', Times, serif;
+            padding-top: 15px;
         }
         #search {
             white-space: pre-wrap;
@@ -33,7 +42,7 @@
             background: rgba(0, 0, 0, 0);
             appearance: none;
             width: 145px;
-            height: 15px;
+            height: 16px;
             position: relative;
             border-radius: 6px;
             padding: 8px;
@@ -41,8 +50,11 @@
             color: rgb(0, 0, 0);
             font-size: 16px;
             font-weight: 400;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             transition: all .2s ease;
             vertical-align: middle;
+            margin-top: -10px;
+
         }
 
         #relButton {
@@ -52,15 +64,16 @@
             border-radius: 6px;
             border: 2px solid #c1a195;
             color: #c1a195;
-            background: 0 0;
             padding: 8px;
             box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
             font-weight: 300;
             font-size: 14px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             height: 33px;
             width: 170px;
             vertical-align: middle;
             text-align: center;
+            margin-top: -10px;
         }
 
         #randButton {
@@ -74,9 +87,11 @@
             padding: 8px;
             box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
             font-weight: 300;
-            font-size: 16px;
+            font-size: 18px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             height: 42px;
             width: 340px;
+            margin-bottom: -10px;
         }
         #outText {
             vertical-align: middle;
@@ -88,6 +103,7 @@
         #or {
             font-size: 14px;
             padding: 10px;
+            font-family: 'Times New Roman', Times, serif;
         }
         #hr{
             width: 145px;
@@ -101,11 +117,11 @@
 <body>
     <h2 id=title></h2>
     <p id=motto> Website for bringing your daily art.</p>
-    <input type=button id=randButton value="Get Random Art" onclick="getRandomArt()">
+    <input type=button id=randButton value="Get Random Art !" onclick="getRandomArt()">
     <p></p><hr id="hr"><b id="or">OR</b><hr id="hr"><p></p>
     <input type=text id=search value="rabbit">
     <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt()">
-    <p id="motto">I brought you this:</p>
+    <p id="motto2">I brought you this:</p>
     <b id=outText></b>
     <p id=outImg></p>
     
