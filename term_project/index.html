@@ -9,7 +9,7 @@
 
     <style>
         body {
-            max-width: 500px;
+            max-width: 600px;
         }
 
         img {
@@ -21,24 +21,22 @@
 
         #search {
             white-space: pre-wrap;
-            width: auto;
             box-shadow: inset #abacaf 0 0 0 2px;
             border: 0;
             background: rgba(0, 0, 0, 0);
             appearance: none;
-            width: 120px;
-            height: 12px;
+            width: 160px;
+            height: 15px;
             position: relative;
-            border-radius: 3px;
+            border-radius: 6px;
             padding: 8px;
             line-height: 1.4;
             color: rgb(0, 0, 0);
             font-size: 16px;
             font-weight: 400;
             transition: all .2s ease;
+            vertical-align: middle;
         }
-
-
 
         #relButton {
             display: inline-block;
@@ -50,15 +48,15 @@
             background: 0 0;
             padding: 8px;
             box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
-            font-weight: 700;
-            font-size: 12px;
-            height: 35px;
-            width: 200px;
-
+            font-weight: 300;
+            font-size: 14px;
+            height: 33px;
+            width: 180px;
+            vertical-align: middle;
+            text-align: center;
         }
 
         #randButton {
-
             display: inline-block;
             outline: 0;
             cursor: pointer;
@@ -68,14 +66,24 @@
             background-color: #c1a195;
             padding: 8px;
             box-shadow: rgba(0, 0, 0, 0.07) 0px 2px 4px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1.5px 0px;
-            font-weight: 800;
+            font-weight: 300;
             font-size: 16px;
             height: 42px;
-            width: 340px;
+            width: 360px;
         }
 
         #out {
             color: rgb(140, 15, 15);
+        }
+        #or {
+            font-size: 15px;
+            padding: 10px;
+            
+        }
+        #hr{
+            width: 155px;
+            display: inline-block;
+            vertical-align: middle;
         }
     </style>
     <base href="https://www.w3schools.com/" target="_blank">
@@ -85,7 +93,7 @@
     <h2 id=title></h2>
     <p> Website for bringing your daily art.</p>
     <input type=button id=randButton value="Get Random Art" onclick="getRandomArt()">
-    <p></p>
+    <p></p><hr id="hr"><b id="or">OR</b><hr id="hr"><p></p>
     <input type=text id=search value="rabbit">
     <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt()">
     <p><b>I brought you this:</b></p>
@@ -144,7 +152,7 @@
             outText.innerText = data.title
         }
 
-
+        getSpecificArt();
     </script>
 </body>
 
