@@ -10,15 +10,22 @@
     <style>
         body {
             max-width: 500px;
+            padding-left: 5px;
         }
 
         img {
-            padding: 5px;
+            padding: 10px;
             width: 90%;
             height: 90%;
             float: center;
         }
-
+        #title{
+            font-style: italic;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        #motto{
+            font-size: ;
+        }
         #search {
             white-space: pre-wrap;
             box-shadow: inset #abacaf 0 0 0 2px;
@@ -71,7 +78,10 @@
             height: 42px;
             width: 340px;
         }
-
+        #outText {
+            vertical-align: middle;
+            
+        }
         #out {
             color: rgb(140, 15, 15);
         }
@@ -85,19 +95,20 @@
             vertical-align: middle;
         }
     </style>
-    <base href="https://www.w3schools.com/" target="_blank">
+   
 </head>
 
 <body>
     <h2 id=title></h2>
-    <p> Website for bringing your daily art.</p>
+    <p id=motto> Website for bringing your daily art.</p>
     <input type=button id=randButton value="Get Random Art" onclick="getRandomArt()">
     <p></p><hr id="hr"><b id="or">OR</b><hr id="hr"><p></p>
     <input type=text id=search value="rabbit">
     <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt()">
-    <p><b>I brought you this:</b></p>
-    <p id=outImg></p>
+    <p>I brought you this:</p>
     <b id=outText></b>
+    <p id=outImg></p>
+    
     <script>
         "use strict";
         title.innerText = document.title
