@@ -122,9 +122,10 @@
     <input type=text id=search value="rabbit">
     <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt()">
     <p id="motto2">I brought you this:</p>
-    <b id=outText></b>
+    <b id=outTitle></b>
     <p id=outImg></p>
-    
+    <p id=outInfo></p>
+
     <script>
         "use strict";
         title.innerText = document.title
@@ -142,8 +143,6 @@
 
         async function getRandomArt() {
             var img_id = Math.floor(Math.random() * 1056);
-            /*let u = "https://api.harvardartmuseums.org/image/" + img_id + "?"
-                + "apikey=" + accessKey + "&sort=random";*/
             let u = "https://api.harvardartmuseums.org/object?page=" + img_id + "&size=1" + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
             fetch(u).then(r => r.json())
@@ -169,13 +168,20 @@
         function showArt(data) {
             let a = data.primaryimageurl;
             console.log(data)
-
             outImg.innerHTML = `<img title="" alt="" src="${a}">`
             showInfo(data)
         }
         function showInfo(data) {
+            const BR = '<BR>'
             console.log(data.title)
-            outText.innerText = data.title
+            outTitle.innerText = data.title
+            outInfo.innerHTML = "<b>Century : </b>"+data.century+BR;
+            outInfo.innerHTML += "<b>Date : </b>"+data.datebegin+" - "+data.dateend+BR;
+            outInfo.innerHTML += "<b>Department : </b>"+data.department+BR;
+            outInfo.innerHTML += "<b>Division : </b>"+data.division+BR;
+            outInfo.innerHTML += "<b>Artist : </b>"+data.people[0].name+BR;
+            outInfo.innerHTML += "<b>Culture : </b>"+data.culture+BR;
+            outInfo.innerHTML += "<b>Resource : </b>"+`<a href="${data.url}" target="_blank">Harvard Art Museums</a>` + BR;
         }
 
         getRandomArt();
