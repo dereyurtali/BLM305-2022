@@ -182,7 +182,10 @@
             var related = search.value;
             let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey + "&hasimage=1";
             let data = await toJSON(u)
-            fetch(u).then(r => r.json())            
+            fetch(u).then(r => r.json())
+            if(data.info.totalrecords==0){
+                alert("No record found. Try something different.");
+            }
             data = data.records[i];
             if (data.primaryimageurl == null) {
                 changeImage();
