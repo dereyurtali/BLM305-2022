@@ -22,22 +22,26 @@
             margin-top: -15px;
             margin-bottom: -15px;
         }
-        #title{
+
+        #title {
             font-style: italic;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
-        #motto{
+
+        #motto {
             font-size: 15px;
             font-family: 'Times New Roman', Times, serif;
             margin-top: -15px;
             margin-bottom: 25px;
         }
-        #motto2{
+
+        #motto2 {
             font-size: 15px;
             font-family: 'Times New Roman', Times, serif;
             padding-top: 15px;
             padding-bottom: 20px;
         }
+
         #search {
             white-space: pre-wrap;
             box-shadow: inset #abacaf 0 0 0 2px;
@@ -97,40 +101,47 @@
             width: 340px;
             margin-bottom: -10px;
         }
+
         #outTitle {
             vertical-align: middle;
             padding-left: 7px;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
             font-style: italic;
         }
-        #outInfo{
+
+        #outInfo {
             vertical-align: middle;
             padding-left: 10px;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;   
-            font-size: 12px;        
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 12px;
             padding-bottom: 50px;
         }
+
         #or {
             font-size: 14px;
             padding: 10px;
             font-family: 'Times New Roman', Times, serif;
         }
-        #hr{
+
+        #hr {
             width: 145px;
             display: inline-block;
             vertical-align: middle;
         }
     </style>
-   
+
 </head>
 
 <body>
     <h2 id=title></h2>
     <p id=motto> Website for bringing your daily art.</p>
     <input type=button id=randButton value="Get Random Art !" onclick="getRandomArt()">
-    <p></p><hr id="hr"><b id="or">OR</b><hr id="hr"><p></p>
+    <p></p>
+    <hr id="hr"><b id="or">OR</b>
+    <hr id="hr">
+    <p></p>
     <input type=text id=search value="rabbit">
-    <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt()">
+    <input type=button id=relButton value="Get Something Related" onclick="getSpecificArt(0)">
     <p id="motto2">I brought you this:</p>
     <b id=outTitle></b>
     <p id=outImg></p>
@@ -139,6 +150,8 @@
     <script>
         "use strict";
         title.innerText = document.title
+        let clickCount = 0;
+        let lastClicked = 0; // 0 is for random, 1 is for specific
         async function toJSON(url) {
             try {
                 let r = await fetch(url)
@@ -152,6 +165,7 @@
         var accessKey = "44376958-9315-49b1-958f-3157883b53f6"; //saklanabilir, simdilik gerek yok
 
         async function getRandomArt() {
+            lastClicked = 0;
             var img_id = Math.floor(Math.random() * 1056);
             let u = "https://api.harvardartmuseums.org/object?page=" + img_id + "&size=1" + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
             let data = await toJSON(u)
@@ -163,14 +177,15 @@
                 showArt(data)
             }
         }
-        async function getSpecificArt() {
+        async function getSpecificArt(i) {
+            lastClicked = 1;
             var related = search.value;
-            let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey + "&hasimage=1" + "&sort=random";
+            let u = "https://api.harvardartmuseums.org/object?q=" + related + "&apikey=" + accessKey + "&hasimage=1";
             let data = await toJSON(u)
-            fetch(u).then(r => r.json())
-            data = data.records[0];
+            fetch(u).then(r => r.json())            
+            data = data.records[i];
             if (data.primaryimageurl == null) {
-                getRandomArt();
+                changeImage();
             } else {
                 showArt(data)
             }
@@ -178,22 +193,31 @@
         function showArt(data) {
             let a = data.primaryimageurl;
             console.log(data)
-            outImg.innerHTML = `<img title="" alt="" src="${a}">`
+            outImg.innerHTML = `<img id="artImg" src="${a}" onclick="changeImage()">`
             showInfo(data)
         }
         function showInfo(data) {
             const BR = '<BR>'
             console.log(data.title)
             outTitle.innerText = data.title
-            outInfo.innerHTML = "<b>Century : </b>"+data.century+BR;
-            outInfo.innerHTML += "<b>Date : </b>"+data.datebegin+" - "+data.dateend+BR;
-            outInfo.innerHTML += "<b>Department : </b>"+data.department+BR;
-            outInfo.innerHTML += "<b>Division : </b>"+data.division+BR;
-            outInfo.innerHTML += "<b>Artist : </b>"+data.people[0].name+BR;
-            outInfo.innerHTML += "<b>Culture : </b>"+data.culture+BR;
-            outInfo.innerHTML += "<b>Resource : </b>"+`<a href="${data.url}" target="_blank">Harvard Art Museums</a>` + BR;
+            outInfo.innerHTML = "<b>Century : </b>" + data.century + BR;
+            outInfo.innerHTML += "<b>Date : </b>" + data.datebegin + " - " + data.dateend + BR;
+            outInfo.innerHTML += "<b>Department : </b>" + data.department + BR;
+            outInfo.innerHTML += "<b>Division : </b>" + data.division + BR;
+            outInfo.innerHTML += "<b>Artist : </b>" + data.people[0].name + BR;
+            outInfo.innerHTML += "<b>Culture : </b>" + data.culture + BR;
+            outInfo.innerHTML += "<b>Resource : </b>" + `<a href="${data.url}" target="_blank">Harvard Art Museums</a>` + BR;
         }
-
+        function changeImage() {
+            if(lastClicked){
+                if(clickCount>9){
+                    clickCount=0;
+                }
+                getSpecificArt(++clickCount);
+            }else{
+                getRandomArt();
+            }
+        }
         getRandomArt();
     </script>
 </body>
