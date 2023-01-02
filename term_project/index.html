@@ -207,7 +207,7 @@
             outInfo.innerHTML += "<b>Date : </b>" + data.datebegin + " - " + data.dateend + BR;
             outInfo.innerHTML += "<b>Department : </b>" + data.department + BR;
             outInfo.innerHTML += "<b>Division : </b>" + data.division + BR;
-            outInfo.innerHTML += "<b>Artist : </b>" + data.people[0].name + BR;
+            if(data.peoplecount>0){outInfo.innerHTML += "<b>Artist : </b>" + data.people[0].name + BR;}
             outInfo.innerHTML += "<b>Culture : </b>" + data.culture + BR;
             outInfo.innerHTML += "<b>Resource : </b>" + `<a href="${data.url}" target="_blank">Harvard Art Museums</a>` + BR;
         }
